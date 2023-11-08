@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/1.1.0/modern-normalize.min.css"
+      integrity="sha384-o+5dWaAxicpWsXNbxiBxHQNbMq1tRddfYsg5r/6h5cD+KZw3QfmQJdzSik6aFj3E"
+      crossorigin="anonymous"
+    />
+    <link rel="shortcut icon" href="/goit-advancedjs-hw-04/assets/favicon-9562b06e.ico" />
+    
+    <title>Gallery search</title>
+    <script type="module" crossorigin src="/goit-advancedjs-hw-04/commonHelpers.js"></script>
+    <link rel="modulepreload" crossorigin href="/goit-advancedjs-hw-04/assets/vendor-a94593f8.js">
+    <link rel="stylesheet" href="/goit-advancedjs-hw-04/assets/vendor-a51daae5.css">
+    <link rel="stylesheet" href="/goit-advancedjs-hw-04/assets/index-ac643bfd.css">
+  </head>
+  <body>
+    <form class="search-form" id="search-form">
+      <a href="https://pixabay.com/" target="_blank">
+        <img
+          class="search-form__logo"
+          src="/goit-advancedjs-hw-04/assets/pixabay-logo-85c22484.png"
+          alt="logo"
+          width="200"
+        />
+      </a>
+      <input
+        class="search-form__input"
+        type="text"
+        name="searchQuery"
+        autocomplete="off"
+        placeholder="Search images..."
+      />
+      <button class="search-form__button" type="submit">
+        <img
+          class="img-search"
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAB8UlEQVR4nMWWuy6EURDHf4W4JJQrdoXXYENQK1Q2gk1oiU5IdDqXgkZCIaj3AXgFSg8gWBQusbZxl09OMpLN5Jz9znfBP5liv535z5w5c2YGwtEBzACHwBnwDgTAG3AFlIA5IEPK6AL2gS9xGCbPwI7YJcYc8OLpWEsFGI/ruEFOEaQgG3EC2HaQXQIrQD+QBRqBnPw238sOO/NfpLQHSsw1zANNIbbNwILj2iZ9nHdbjG+BnignAHrFrpbnHmgPMzywnDyq8x/kgVfFt1XPIGt5aibtSbCo+KpAq0t51lJwYXeOR03owpx2KR8lqdw6WFW8uy7FM6VonlYaGFC8py7Fd6VoaiIN5BTvg0sxUGKaTBpoUrxPLsU3pWgiTwOdivfRpXj9SzUwqHiPXYqlX3oF64p3z3cGlOUdJ0GLJbMFl3JGlolaZTNYkmDJsiPUPdSOZRaYwRIHfZbCXvOZhhXLNMzHcH6neG6ANh/jCUtPeJXB0uxx50uWkwdSjN7YdGw2ZentA9InGuWdD4kDXXC18gGMRQliuQ5ZXPkEilGCKMomE8fZjWTlI2kmMrLJVD0dV8TxT8GNpREEsslMyTw/lZ7+KBk6kQ5XcBRqakEkwagliMg1kRSuTIz8dxDnfxmALQjTX/4cJu1mD70Ahr8BX/ROvaQCOfMAAAAASUVORK5CYII="
+          alt="search"
+          width="20"
+        />Search
+      </button>
+    </form>
+
+    <div class="gallery"></div>
+
+    <div class="preloader is-hidden">
+      <div class="loader"></div>
+    </div>
+
+    <button type="button" class="load-more is-hidden">Load more</button>
+
+    
+  </body>
+</html>
