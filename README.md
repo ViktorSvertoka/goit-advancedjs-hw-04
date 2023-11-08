@@ -10,7 +10,7 @@
 - Для HTTP-запитів використана бібліотека [axios](https://axios-http.com/).
 - Використовується синтаксис `async/await`.
 - Для повідомлень використана бібліотека
-  [notiflix](https://github.com/notiflix/Notiflix#readme).
+  [ iziToast](https://izitoast.marcelodolza.com/).
 - Код відформатований за допомогою `Prettier`.
 
 #### Формат оцінювання:
