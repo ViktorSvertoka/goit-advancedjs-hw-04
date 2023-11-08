@@ -12,15 +12,16 @@ let isShown = 0;
 const newsApiService = new NewsApiService();
 
 searchForm.addEventListener('submit', onSearch);
-loadMoreBtn.addEventListener('click', onLoadMore);
 
-const options = {
-  rootMargin: '50px',
-  root: null,
-  threshold: 0.3,
-};
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      onLoadMore();
+    }
+  });
+});
 
-const observer = new IntersectionObserver(onLoadMore, options);
+observer.observe(loadMoreBtn);
 
 function onSearch(event) {
   event.preventDefault();
@@ -40,6 +41,8 @@ function onSearch(event) {
     return;
   }
 
+  event.currentTarget.reset();
+
   isShown = 0;
   fetchGallery();
   onRenderGallery(hits);
@@ -49,6 +52,8 @@ function onLoadMore() {
   newsApiService.incrementPage();
   fetchGallery();
 }
+
+let isFirstLoad = true;
 
 async function fetchGallery() {
   loadMoreBtn.classList.add('is-hidden');
@@ -82,6 +87,17 @@ async function fetchGallery() {
     });
 
     loadMoreBtn.classList.remove('is-hidden');
+
+    if (!isFirstLoad) {
+      const { height: cardHeight } =
+        galleryContainer.firstElementChild.getBoundingClientRect();
+      window.scrollBy({
+        top: cardHeight * 2,
+        behavior: 'smooth',
+      });
+    }
+
+    isFirstLoad = false;
   }
 
   if (isShown >= total) {
