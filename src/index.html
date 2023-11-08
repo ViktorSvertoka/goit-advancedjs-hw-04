@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/modern-normalize/1.1.0/modern-normalize.min.css"
+      integrity="sha384-o+5dWaAxicpWsXNbxiBxHQNbMq1tRddfYsg5r/6h5cD+KZw3QfmQJdzSik6aFj3E"
+      crossorigin="anonymous"
+    />
+    <link rel="shortcut icon" href="./images/favicon.ico" />
+    <link rel="stylesheet" href="./sass/index.scss" />
+    <title>Gallery search</title>
+  </head>
+  <body>
+    <form class="search-form" id="search-form">
+      <a href="https://pixabay.com/" target="_blank">
+        <img
+          class="search-form__logo"
+          src="./images/pixabay-logo.png"
+          alt="logo"
+          width="200"
+        />
+      </a>
+      <input
+        class="search-form__input"
+        type="text"
+        name="searchQuery"
+        autocomplete="off"
+        placeholder="Search images..."
+      />
+      <button class="search-form__button" type="submit">
+        <img
+          class="img-search"
+          src="./images/search.png"
+          alt="search"
+          width="20"
+        />Search
+      </button>
+    </form>
+
+    <div class="gallery"></div>
+
+    <div class="preloader is-hidden">
+      <div class="loader"></div>
+    </div>
+
+    <button type="button" class="load-more is-hidden">Load more</button>
+
+    <script src="./index.js" type="module"></script>
+  </body>
+</html>
