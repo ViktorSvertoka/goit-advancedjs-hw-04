@@ -6,7 +6,7 @@ import{a as y,S as b,i as l}from"./assets/vendor-a94593f8.js";(function(){const 
        <div class="info">
        <p class="info-item"><b>Likes</b>${r}</p>
        <p class="info-item"><b>Views</b>${n}</p>
-       <p class "info-item"><b>Comments</b>${m}</p>
+       <p class="info-item"><b>Comments</b>${m}</p>
        <p class="info-item"><b>Downloads</b>${g}</p>
        </div>
        </div>`).join("");d.insertAdjacentHTML("beforeend",t),P.refresh()}
