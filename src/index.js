@@ -1,36 +1,29 @@
 import './sass/index.scss';
-import NewsApiService from './js/api-service';
+import ApiService from './js/api-service';
 import { lightbox } from './js/lightbox';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 const searchForm = document.querySelector('.search-form');
 const galleryContainer = document.querySelector('.gallery');
-const loadMoreBtn = document.querySelector('.load-more');
+const loader = document.querySelector('.loader');
+
+function toggleClass(element, isVisible) {
+  element.classList.toggle('is-hidden', !isVisible);
+}
 
 let isShown = 0;
-const newsApiService = new NewsApiService();
+const api = new ApiService();
 
 searchForm.addEventListener('submit', onSearch);
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      onLoadMore();
-    }
-  });
-});
-
-observer.observe(loadMoreBtn);
-
 function onSearch(event) {
   event.preventDefault();
-
   galleryContainer.innerHTML = '';
-  newsApiService.query = event.currentTarget.elements.searchQuery.value.trim();
-  newsApiService.resetPage();
+  api.query = event.currentTarget.elements.searchQuery.value.trim();
+  api.resetPage();
 
-  if (newsApiService.query === '') {
+  if (api.query === '') {
     iziToast.warning({
       title: 'Warning',
       message: 'Please, fill the main field',
@@ -45,20 +38,13 @@ function onSearch(event) {
 
   isShown = 0;
   fetchGallery();
-  onRenderGallery(hits);
-}
-
-function onLoadMore() {
-  newsApiService.incrementPage();
-  fetchGallery();
 }
 
 let isFirstLoad = true;
 
 async function fetchGallery() {
-  loadMoreBtn.classList.add('is-hidden');
-
-  const result = await newsApiService.fetchGallery();
+  toggleClass(loader, true);
+  const result = await api.fetchGallery();
   const { hits, total } = result;
   isShown += hits.length;
 
@@ -71,7 +57,6 @@ async function fetchGallery() {
       color: 'red',
     });
 
-    loadMoreBtn.classList.add('is-hidden');
     return;
   }
 
@@ -85,8 +70,6 @@ async function fetchGallery() {
       position: 'topRight',
       color: 'green',
     });
-
-    loadMoreBtn.classList.remove('is-hidden');
 
     if (!isFirstLoad) {
       const { height: cardHeight } =
@@ -108,6 +91,7 @@ async function fetchGallery() {
       color: 'blue',
     });
   }
+  toggleClass(loader, false);
 }
 
 function onRenderGallery(elements) {
@@ -140,3 +124,22 @@ function onRenderGallery(elements) {
   galleryContainer.insertAdjacentHTML('beforeend', markup);
   lightbox.refresh();
 }
+
+function onLoadMore() {
+  api.incrementPage();
+  fetchGallery();
+}
+
+function checkIfEndOfPage() {
+  return (
+    window.innerHeight + window.scrollY >= document.documentElement.scrollHeight
+  );
+}
+
+function showLoadMorePage() {
+  if (checkIfEndOfPage()) {
+    onLoadMore();
+  }
+}
+
+window.addEventListener('scroll', showLoadMorePage);
