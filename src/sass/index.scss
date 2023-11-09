@@ -1,4 +1,25 @@
+@import '../../node_modules/modern-normalize/modern-normalize.css';
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src: local('SourceCodePro Regular'), local('SourceCodePro-Regular'),
+    url('../fonts/SourceCodePro-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src: local('SourceCodePro Bold'), local('SourceCodePro-Bold'),
+    url('../fonts/SourceCodePro-Bold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
 body {
+  font-family: 'Source Code Pro', monospace;
   margin: 0;
   padding: 20px;
   overflow: auto;
@@ -131,7 +152,7 @@ p {
 
 .search-form__input {
   width: 300px;
-  height: 30px;
+  height: 40px;
   padding: 5px 5px 5px 15px;
   font-size: 16px;
   outline: none;

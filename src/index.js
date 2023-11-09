@@ -71,14 +71,14 @@ async function fetchGallery() {
       color: 'green',
     });
 
-    if (!isFirstLoad) {
-      const { height: cardHeight } =
-        galleryContainer.firstElementChild.getBoundingClientRect();
-      window.scrollBy({
-        top: cardHeight * 2,
-        behavior: 'smooth',
-      });
-    }
+    // if (!isFirstLoad) {
+    //   const { height: cardHeight } =
+    //     galleryContainer.firstElementChild.getBoundingClientRect();
+    //   window.scrollBy({
+    //     top: cardHeight * 2,
+    //     behavior: 'smooth',
+    //   });
+    // }
 
     isFirstLoad = false;
   }
