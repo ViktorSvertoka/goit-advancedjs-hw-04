@@ -8,7 +8,6 @@ import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchForm = document.querySelector('.search-form');
 const gallery = document.querySelector('.gallery');
-// const loader = document.querySelector('.loader');
 
 let query = '';
 let page = 1;
@@ -22,7 +21,7 @@ window.addEventListener('scroll', handleScroll);
 function onSearch(event) {
   event.preventDefault();
   const newQuery = event.currentTarget.searchQuery.value.trim();
-  // gallery.innerHTML = '';
+  gallery.innerHTML = '';
 
   if (newQuery === query || newQuery === '') {
     iziToast.warning({
@@ -58,10 +57,6 @@ function onSearch(event) {
           position: 'topRight',
           color: 'green',
         });
-
-        if (data.totalHits > perPage) {
-          // toggleClass(loader, false);
-        }
       }
     })
     .catch(error => console.log(error))
@@ -106,10 +101,3 @@ function checkIfEndOfPage() {
     window.innerHeight + window.scrollY >= document.documentElement.scrollHeight
   );
 }
-
-// function toggleClass(element, isVisible) {
-//   element.classList.toggle('is-hidden', !isVisible);
-// }
-
-// toggleClass(loader, true);
-// toggleClass(loader, false);
