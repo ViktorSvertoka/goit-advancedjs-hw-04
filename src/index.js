@@ -62,7 +62,6 @@ function onSearch(event) {
     .catch(error => console.log(error))
     .finally(() => {
       searchForm.reset();
-      window.removeEventListener('scroll', handleScroll);
       window.addEventListener('scroll', handleScroll);
     });
 }
@@ -87,6 +86,8 @@ function handleScroll() {
             position: 'topRight',
             color: 'blue',
           });
+
+          window.removeEventListener('scroll', handleScroll);
         }
       })
       .catch(error => console.log(error))
