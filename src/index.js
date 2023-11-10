@@ -1,29 +1,30 @@
 import './sass/index.scss';
-import ApiService from './js/api-service';
-import { lightbox } from './js/lightbox';
+import { apiService } from './js/api-service';
+import { onRenderGallery } from './js/render-gallery';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const searchForm = document.querySelector('.search-form');
-const galleryContainer = document.querySelector('.gallery');
-const loader = document.querySelector('.loader');
+const gallery = document.querySelector('.gallery');
+// const loader = document.querySelector('.loader');
 
-function toggleClass(element, isVisible) {
-  element.classList.toggle('is-hidden', !isVisible);
-}
-
-let isShown = 0;
-const api = new ApiService();
+let query = '';
+let page = 1;
+let simpleLightBox;
+const perPage = 40;
+let isLoading = false;
 
 searchForm.addEventListener('submit', onSearch);
+window.addEventListener('scroll', handleScroll);
 
 function onSearch(event) {
   event.preventDefault();
-  galleryContainer.innerHTML = '';
-  api.query = event.currentTarget.elements.searchQuery.value.trim();
-  api.resetPage();
+  const newQuery = event.currentTarget.searchQuery.value.trim();
+  // gallery.innerHTML = '';
 
-  if (api.query === '') {
+  if (newQuery === query || newQuery === '') {
     iziToast.warning({
       title: 'Warning',
       message: 'Please, fill the main field',
@@ -34,100 +35,70 @@ function onSearch(event) {
     return;
   }
 
-  event.currentTarget.reset();
+  query = newQuery;
+  page = 1;
+  gallery.innerHTML = '';
 
-  isShown = 0;
-  fetchGallery();
-}
+  apiService(query, page, perPage)
+    .then(({ data }) => {
+      if (data.totalHits === 0) {
+        iziToast.error({
+          title: 'Error',
+          message:
+            'Sorry, there are no images matching your search query. Please try again.',
+          position: 'topRight',
+          color: 'red',
+        });
+      } else {
+        onRenderGallery(data.hits);
+        simpleLightBox = new SimpleLightbox('.gallery a').refresh();
+        iziToast.success({
+          title: 'Success',
+          message: `Hooray! We found ${data.totalHits} images !!!`,
+          position: 'topRight',
+          color: 'green',
+        });
 
-let isFirstLoad = true;
-
-async function fetchGallery() {
-  toggleClass(loader, true);
-  const result = await api.fetchGallery();
-  const { hits, total } = result;
-  isShown += hits.length;
-
-  if (!hits.length) {
-    iziToast.error({
-      title: 'Error',
-      message:
-        'Sorry, there are no images matching your search query. Please try again.',
-      position: 'topRight',
-      color: 'red',
-    });
-
-    return;
-  }
-
-  onRenderGallery(hits);
-  isShown += hits.length;
-
-  if (isShown < total) {
-    iziToast.success({
-      title: 'Success',
-      message: `Hooray! We found ${total} images !!!`,
-      position: 'topRight',
-      color: 'green',
-    });
-
-    // if (!isFirstLoad) {
-    //   const { height: cardHeight } =
-    //     galleryContainer.firstElementChild.getBoundingClientRect();
-    //   window.scrollBy({
-    //     top: cardHeight * 2,
-    //     behavior: 'smooth',
-    //   });
-    // }
-
-    isFirstLoad = false;
-  }
-
-  if (isShown >= total) {
-    iziToast.info({
-      title: 'Info',
-      message: "We're sorry, but you've reached the end of search results.",
-      position: 'topRight',
-      color: 'blue',
-    });
-  }
-  toggleClass(loader, false);
-}
-
-function onRenderGallery(elements) {
-  const markup = elements
-    .map(
-      ({
-        webformatURL,
-        largeImageURL,
-        tags,
-        likes,
-        views,
-        comments,
-        downloads,
-      }) => {
-        return `
-       <div class="photo-card">
-       <a href="${largeImageURL}">
-       <img class="photo-img" src="${webformatURL}" alt="${tags}" loading="lazy" />
-       </a>
-       <div class="info">
-       <p class="info-item"><b>Likes</b>${likes}</p>
-       <p class="info-item"><b>Views</b>${views}</p>
-       <p class="info-item"><b>Comments</b>${comments}</p>
-       <p class="info-item"><b>Downloads</b>${downloads}</p>
-       </div>
-       </div>`;
+        if (data.totalHits > perPage) {
+          // toggleClass(loader, false);
+        }
       }
-    )
-    .join('');
-  galleryContainer.insertAdjacentHTML('beforeend', markup);
-  lightbox.refresh();
+    })
+    .catch(error => console.log(error))
+    .finally(() => {
+      searchForm.reset();
+      window.removeEventListener('scroll', handleScroll);
+      window.addEventListener('scroll', handleScroll);
+    });
 }
 
-function onLoadMore() {
-  api.incrementPage();
-  fetchGallery();
+function handleScroll() {
+  if (checkIfEndOfPage() && !isLoading) {
+    isLoading = true;
+    page += 1;
+
+    apiService(query, page, perPage)
+      .then(({ data }) => {
+        onRenderGallery(data.hits);
+        simpleLightBox.refresh();
+
+        const totalPages = Math.ceil(data.totalHits / perPage);
+
+        if (page >= totalPages) {
+          iziToast.info({
+            title: 'Info',
+            message:
+              "We're sorry, but you've reached the end of search results.",
+            position: 'topRight',
+            color: 'blue',
+          });
+        }
+      })
+      .catch(error => console.log(error))
+      .finally(() => {
+        isLoading = false;
+      });
+  }
 }
 
 function checkIfEndOfPage() {
@@ -136,10 +107,9 @@ function checkIfEndOfPage() {
   );
 }
 
-function showLoadMorePage() {
-  if (checkIfEndOfPage()) {
-    onLoadMore();
-  }
-}
+// function toggleClass(element, isVisible) {
+//   element.classList.toggle('is-hidden', !isVisible);
+// }
 
-window.addEventListener('scroll', showLoadMorePage);
+// toggleClass(loader, true);
+// toggleClass(loader, false);
